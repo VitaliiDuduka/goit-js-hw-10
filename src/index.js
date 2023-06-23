@@ -30,15 +30,15 @@ function renderBreeds() {
       return data;
     })
     .then(data => {
+      const catsMarkup = [];
       data.map(cat => {
-        const catsMarkup = [];
         const catEl = document.createElement('option');
         catEl.innerHTML = `<option value="${cat.id}">${cat.name}</option>`;
         catsMarkup.push(catEl);
-        selectEl.append(...catsMarkup);
       });
       selectEl.classList.remove('is-hidden');
       loaderEl.classList.add('is-hidden');
+      selectEl.append(...catsMarkup);
     })
     .catch(error => {
       selectEl.classList.add('is-hidden');
