@@ -1,12 +1,12 @@
 import { Report } from 'notiflix/build/notiflix-report-aio';
-// import { catInfo, fetchImage, fetchBreeds, breedDetails } from '../src/cat-api';
-import { catsArray, fetchCatByBreed, fetchBreeds } from '../src/cat-api';
+import { fetchCatByBreed, fetchBreeds } from '../src/cat-api';
 
 
 const selectEl = document.querySelector('.breed-select');
 const catInfoEl = document.querySelector('.cat-info');
 const loaderEl = document.querySelector('.loader');
 
+let catsArray = [];
 let catInfo = {};
 
 function breedDetails(name) {
@@ -25,7 +25,10 @@ function breedDetails(name) {
 function renderBreeds() {
   loaderEl.classList.remove('is-hidden');
 
-  fetchBreeds()
+  fetchBreeds().then(data => {
+      catsArray = data;
+      return data;
+    })
     .then(data => {
       data.map(cat => {
         const markup = document.createElement('option');
@@ -64,7 +67,7 @@ function onSelect(event) {
   catInfoEl.classList.add('is-hidden');
   loaderEl.classList.remove('is-hidden');
 
-  fetchCatByBreed(catInfo.id)
+  fetchCatByBreed(catInfo.id).then(data => data[0].url)
     .then(data => {
       catInfoEl.classList.remove('is-hidden');
       loaderEl.classList.add('is-hidden');
@@ -75,8 +78,8 @@ function onSelect(event) {
       onError();
       loaderEl.classList.add('is-hidden');
     });
-  }
-
+}
+  
 function onError() {
   Report.failure(
     'Ups!',
