@@ -1,23 +1,39 @@
 import { Report } from 'notiflix/build/notiflix-report-aio';
-import { catInfo, fetchImage, fetchBreeds, breedDetails } from '../src/cat-api';
+// import { catInfo, fetchImage, fetchBreeds, breedDetails } from '../src/cat-api';
+import { catsArray, fetchCatByBreed, fetchBreeds } from '../src/cat-api';
+
 
 const selectEl = document.querySelector('.breed-select');
 const catInfoEl = document.querySelector('.cat-info');
 const loaderEl = document.querySelector('.loader');
+
+let catInfo = {};
+
+function breedDetails(name) {
+  catsArray.map(cat => {
+    if (name === cat.name) {
+      catInfo = {
+        name: cat.name,
+        desc: cat.description,
+        temper: cat.temperament,
+        id: cat.id,
+      };
+    }
+  });
+}
 
 function renderBreeds() {
   loaderEl.classList.remove('is-hidden');
 
   fetchBreeds()
     .then(data => {
-      selectEl.classList.remove('is-hidden');
-      loaderEl.classList.add('is-hidden');
-
       data.map(cat => {
         const markup = document.createElement('option');
         markup.innerHTML = `<option value="${cat.id}">${cat.name}</option>`;
         selectEl.append(markup);
       });
+      selectEl.classList.remove('is-hidden');
+      loaderEl.classList.add('is-hidden');
     })
     .catch(error => {
       selectEl.classList.add('is-hidden');
@@ -48,7 +64,7 @@ function onSelect(event) {
   catInfoEl.classList.add('is-hidden');
   loaderEl.classList.remove('is-hidden');
 
-  fetchImage(catInfo.id)
+  fetchCatByBreed(catInfo.id)
     .then(data => {
       catInfoEl.classList.remove('is-hidden');
       loaderEl.classList.add('is-hidden');
@@ -59,7 +75,7 @@ function onSelect(event) {
       onError();
       loaderEl.classList.add('is-hidden');
     });
-}
+  }
 
 function onError() {
   Report.failure(
@@ -73,4 +89,5 @@ function onError() {
   );
 }
 
+  
 
