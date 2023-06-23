@@ -31,9 +31,11 @@ function renderBreeds() {
     })
     .then(data => {
       data.map(cat => {
-        const markup = document.createElement('option');
-        markup.innerHTML = `<option value="${cat.id}">${cat.name}</option>`;
-        selectEl.append(markup);
+        const catsMarkup = [];
+        const catEl = document.createElement('option');
+        catEl.innerHTML = `<option value="${cat.id}">${cat.name}</option>`;
+        catsMarkup.push(catEl);
+        selectEl.append(...catsMarkup);
       });
       selectEl.classList.remove('is-hidden');
       loaderEl.classList.add('is-hidden');
@@ -92,5 +94,4 @@ function onError() {
   );
 }
 
-  
 
